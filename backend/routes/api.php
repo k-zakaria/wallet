@@ -17,16 +17,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 Route::post('/register', [AuthController::class ,'register']);
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
 
 
-Route::post('deposit', [WalletController::class, 'deposit']);
-Route::post('withdrawal', [WalletController::class, 'withdrawal']);
-Route::post('transfer', [WalletController::class, 'transfer']);
-Route::post('transactions', [TransactionController::class, 'getTransactions']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('deposit', [WalletController::class, 'deposit']);
+    Route::post('retrait', [WalletController::class, 'retrait']);
+    Route::post('transfer', [WalletController::class, 'transfer']);
+    Route::get('transactions', [TransactionController::class, 'getTransactions']);
+});

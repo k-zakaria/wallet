@@ -14,13 +14,14 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email' => 'required|string|unique:users,email',
             'password' => 'required|string|confirmed',
+            'role_id' => 'required'
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'role_id' => 1
+            'role_id' => $request->role_id 
         ]);
 
         $token = $user->createToken('myapptoken')->plainTextToken;
