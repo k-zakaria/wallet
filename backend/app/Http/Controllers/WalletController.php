@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class WalletController extends Controller
 {
@@ -20,21 +19,31 @@ class WalletController extends Controller
             ], 400);
         }
 
-        $user->wallet->solde += $amount;
-        $user->wallet->save();
+        $wallet = $user->wallet;
+
+        if (!$wallet) {
+            $wallet = new Wallet();
+            $wallet->user_id = $user->id;
+            $wallet->solde = 0;
+            $wallet->save();
+        }
+
+        $wallet->solde += $amount;
+        $wallet->save();
 
         $transaction = Transaction::create([
-            'sender_id' => $user->wallet->id,
-            'receiver_id' => $user->wallet->id,
+            'sender_id' => $wallet->id,
+            'receiver_id' => $wallet->id,
             'amount' => $amount,
             'type' => 'deposit'
         ]);
 
         return response()->json([
             'message' => 'Deposit successful',
-            'solde' => $user->wallet->solde
+            'solde' => $wallet->solde
         ]);
     }
+
 
 
     public function retrait(Request $request)
@@ -113,7 +122,4 @@ class WalletController extends Controller
             'solde' => $user->wallet->solde
         ]);
     }
-    
-
-    
 }
