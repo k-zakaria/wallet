@@ -24,8 +24,8 @@ Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanct
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('deposit', [WalletController::class, 'deposit']);
-    Route::post('retrait', [WalletController::class, 'retrait']);
-    Route::post('transfer', [WalletController::class, 'transfer']);
-    Route::get('transactions', [TransactionController::class, 'getTransactions']);
+    Route::post('/deposit', [WalletController::class, 'deposit']);
+    Route::post('/retrait', [WalletController::class, 'retrait']);
+    Route::post('/transfer', [WalletController::class, 'transfer']);
+    Route::get('/transactions', [TransactionController::class, 'getTransactions']);
 });
