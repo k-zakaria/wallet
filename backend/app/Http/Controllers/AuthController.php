@@ -8,19 +8,31 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    /**
+     * @SWG\Post(
+     *     path="/register",
+     *     summary="Post a list of register",
+     *     tags={"register"},
+     *     @SWG\Response(response=200, description="Successful operation"),
+     *     @SWG\Response(response=400, description="Invalid request")
+     * )
+     */
+
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'last_name' => 'required|string',
+            'first_name' => 'required|string',
             'email' => 'required|string|unique:users,email',
             'password' => 'required|string|confirmed',
         ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'last_name' => $request->last_name,
+            'first_name' => $request->first_name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'role_id' => 1
+            'role_id' => 1,
         ]);
 
         $token = $user->createToken('myapptoken')->plainTextToken;
@@ -32,6 +44,16 @@ class AuthController extends Controller
 
         return response($response, 201);
     }
+
+    /**
+     * @SWG\Post(
+     *     path="/login",
+     *     summary="Post a list of login",
+     *     tags={"login"},
+     *     @SWG\Response(response=200, description="Successful operation"),
+     *     @SWG\Response(response=400, description="Invalid request")
+     * )
+     */
 
     public function login(Request $request)
     {
@@ -56,6 +78,15 @@ class AuthController extends Controller
     }
 
 
+     /**
+     * @SWG\Post(
+     *     path="/logout",
+     *     summary="Post a list of logout",
+     *     tags={"logout"},
+     *     @SWG\Response(response=200, description="Successful operation"),
+     *     @SWG\Response(response=400, description="Invalid request")
+     * )
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
